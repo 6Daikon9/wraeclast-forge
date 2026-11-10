@@ -1,6 +1,6 @@
 import {allowed,conflict,families,progress,total} from './engine.mjs';
 
-export const VERSION='1.0.0';
+export const VERSION='1.1.0';
 const source=id=>'https://poe2db.tw/us/'+id;
 const orb=(id,name,type,rarity,extra={})=>({id,name,type,rarity,category:'Сферы',source:source(id),...extra});
 export const CORE_ACTIONS=[
@@ -183,9 +183,9 @@ export function applyCraft(p,g,a,result,omenIds=[]){
   if(o.implicitRoll)n.implicitRoll=cleanText(o.implicitRoll,1500);
  }}
  if(x.consumeCatalyst){n.catalyst={...n.catalyst,quality:0};n.quality=0}
- const cost=(id,rate)=>({currency:id.replaceAll('_',' '),qty:1,rate:rate===''||rate===undefined?null:rate,note:cleanText(result.description||a.name,500),date:new Date().toISOString(),stepId:step});
- n.entries.push(cost(a.currency||a.id,result.rate));for(const id of omenIds)n.entries.push(cost(id,result.omenRates?.[id]));
- for(const e of n.entries.slice(p.entries.length))if(e.rate!==null&&(!Number.isFinite(e.rate)||e.rate<0))throw Error('Неверная цена операции');
+ const cost=(id,rate,quoteInfo)=>({quoteInfo:quoteInfo?structuredClone(quoteInfo):undefined,currency:id.replaceAll('_',' '),qty:1,rate:rate===''||rate===undefined?null:rate,note:cleanText(result.description||a.name,500),date:new Date().toISOString(),stepId:step});
+ n.entries.push(cost(a.currency||a.id,result.rate,result.quoteInfo));for(const id of omenIds)n.entries.push(cost(id,result.omenRates?.[id],result.omenQuoteInfo?.[id]));
+ for(const e of n.entries.slice(p.entries.length))if(e.rate!==null&&(!Number.isFinite(e.rate)||e.rate<0||e.rate>1e9))throw Error('Неверная цена операции');
  const crafted=n.mods.filter(m=>m.crafted).length;if(crafted>craftedLimit(n,g))throw Error('Итог превышает лимит crafted-модов');
  n.history=[...(n.history||[]).slice(-19),{stepId:step,snapshot,label:a.name}];n.lastOutcome={currency:a.id,roll:result.description||a.name};n.updated=Date.now();return n;
 }

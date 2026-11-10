@@ -12,3 +12,5 @@ jobs:
           node-version: '22'
       - run: npm test
       - run: npm run build:portable
+      - run: npm run build:worker
+      - run: node scripts/verify-worker.mjs

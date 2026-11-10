@@ -5,3 +5,4 @@ site.tar.gz
 .openai/*.local.*
 node_modules/
 outputs/
+dist/server/
