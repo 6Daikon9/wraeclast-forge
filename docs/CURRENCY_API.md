@@ -32,7 +32,7 @@ Currency names are matched by exact Unicode-normalized alphanumeric keys, ignori
 - Upstream requests are cached for 30 minutes and concurrent identical requests are combined.
 - Revalidation uses ETag/If-None-Match and Last-Modified/If-Modified-Since where supplied.
 - Failed requests back off and HTTP Retry-After is respected.
-- The Worker also uses Cloudflare's response cache for the bounded public API routes.
+- The Worker uses the same bounded in-memory cache as the local server; it does not require Cloudflare's default cache, which Sites does not grant.
 - Browser caches and overrides are isolated by provider and exact league. Changing the source or league never silently uses another market's quotes.
 - Auto-refresh is at most every 30 minutes while the page is visible. No background automation is created.
 - Cached quotes older than 30 minutes are marked as saved/stale. Quotes older than 24 hours are not automatically applied.
